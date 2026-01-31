@@ -10,21 +10,24 @@ run_archive() {
     echo "|_____| |_____/ |       |_____|   |    \  /  |______";
     echo "|     | |    \_ |_____  |     | __|__   \/   |______";
     echo "";
-    echo "This utility will help you create a TAR archive of a specified directory."
     echo "Follow the steps below to complete the archiving process."
     echo "----------------------------------------------------------"
 
     # 1. GET SOURCE PATH
-    read -p "Step 1: Enter the directory to BACKUP (e.g., /home/user/documents): " SOURCE_DIR < /dev/tty
-
-    # Validate Source
-    if [ ! -d "$SOURCE_DIR" ]; then
-        echo "Error: Source '$SOURCE_DIR' does not exist."
-        exit 1
+    read -p "Step 1: Enter the directory to BACKUP [Press Enter for current directory]: " SOURCE_DIR < /dev/tty
+    # If user pressed Enter, use current directory
+    if [ -z "$SOURCE_DIR" ]; then
+        SOURCE_DIR=$(pwd)
+        echo "Using current directory: $SOURCE_DIR"
     fi
 
     # 2. GET DESTINATION PATH
-    read -p "Step 2: Enter the directory to SAVE the archive (e.g., /home/user/backups): " ARCHIVE_DIR < /dev/tty
+        read -p "Step 2: Enter the directory to SAVE the archive [Press Enter to save in current directory]: " ARCHIVE_DIR < /dev/tty
+    # If user pressed Enter, use current directory
+    if [ -z "$ARCHIVE_DIR" ]; then
+        ARCHIVE_DIR=$(pwd)
+        echo "Using current directory: $ARCHIVE_DIR"
+    fi
 
     # 3. HANDLE DESTINATION LOGIC
     if [ ! -d "$ARCHIVE_DIR" ]; then
@@ -58,9 +61,8 @@ run_restore() {
     echo "|_____/ |______ |______    |    |     | |_____/ |______";
     echo "|    \_ |______ ______|    |    |_____| |    \_ |______";
     echo "";
-    echo "This utility will help you restore a TAR archive to a specified directory."
-    echo "Follow the steps below to complete the restoration process."
-    echo "----------------------------------------------------------"
+    echo "Follow the steps below to complete the restoration process of existing tar arvhive."
+    echo "-----------------------------------------------------------------------------------"
 
     # 1. ASK FOR THE ARCHIVE FILE
     read -p "Enter the full path of the .tar file: " ARCHIVE_FILE < /dev/tty
@@ -72,7 +74,12 @@ run_restore() {
     fi
 
     # 2. ASK FOR THE RESTORE DESTINATION
-    read -p "Enter the directory to extract TO (e.g., /home/user/restore): " RESTORE_DIR < /dev/tty
+    read -p "Enter the directory to extract TO [Press Enter to extract to current directory]: " RESTORE_DIR < /dev/tty
+    # If user pressed Enter, use current directory
+    if [ -z "$RESTORE_DIR" ]; then
+        RESTORE_DIR=$(pwd)
+        echo "Using current directory: $RESTORE_DIR"
+    fi
 
     # 3. PREPARE DESTINATION
     if [ ! -d "$RESTORE_DIR" ]; then
